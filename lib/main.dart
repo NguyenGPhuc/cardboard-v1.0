@@ -4,9 +4,17 @@ import 'package:flutter/services.dart';
 
 import 'core/app_export.dart';
 
-// File change
-void main() {
+// Import firebase class
+import 'firebase.dart';
+
+// Using async to make app wait for Firebase to initialize
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  print("App initialized");
+
+  // Initialize Firebase
+  await FirebaseService.initializeApp();
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]).then((value) {

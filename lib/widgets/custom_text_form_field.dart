@@ -1,7 +1,16 @@
 import 'package:cardboard/core/app_export.dart';
 import 'package:flutter/material.dart';
 
+
 class CustomTextFormField extends StatelessWidget {
+
+  // Changes on signup screen
+  final Function(String)? onChanged;
+  final Function(String)? onSubmitted;
+  final Function(String)? onEditingComplete;
+  final Function(String)? onSavedCallback;
+
+
   CustomTextFormField(
       {this.shape,
       this.padding,
@@ -21,7 +30,17 @@ class CustomTextFormField extends StatelessWidget {
       this.prefixConstraints,
       this.suffix,
       this.suffixConstraints,
-      this.validator});
+      this.validator,
+
+      // Callbacks function when the text field's content changes.
+      this.onChanged,
+      // Callback function when the user submit the text field content
+      this.onSubmitted,
+      // Callback function when the user finish editing the text field content
+      this.onEditingComplete,
+      // Callback function when the user save the text field content
+      this.onSavedCallback,
+      });
 
   TextFormFieldShape? shape;
 
@@ -71,7 +90,12 @@ class CustomTextFormField extends StatelessWidget {
         : _buildTextFormFieldWidget();
   }
 
+  // Returns user saved texfield information
   _buildTextFormFieldWidget() {
+    String getFieldValue() {
+      return controller?.text ?? '';
+    }
+
     return Container(
       width: width ?? double.maxFinite,
       margin: margin,
@@ -85,6 +109,10 @@ class CustomTextFormField extends StatelessWidget {
         maxLines: maxLines ?? 1,
         decoration: _buildDecoration(),
         validator: validator,
+        onChanged: onChanged,
+        onSaved: onSavedCallback != null ? (value) => onSavedCallback!(value!) : null,
+        onEditingComplete: onEditingComplete != null ? () => onEditingComplete!(getFieldValue()) : null,
+        onFieldSubmitted: onSubmitted,
       ),
     );
   }
