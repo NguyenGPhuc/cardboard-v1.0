@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "595287535519",
+    "firebase_url": "https://cardboard-b1b34-default-rtdb.firebaseio.com",
+    "project_id": "cardboard-b1b34",
+    "storage_bucket": "cardboard-b1b34.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:595287535519:android:8e5eda7a14e7e8fef357aa",
+        "android_client_info": {
+          "package_name": "com.cardboard.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "595287535519-msafr1h3p5nra0gk5a4u9193ll73dd83.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCST_0v1Xwo2R3QS-eBz3MM3PG3x6KBb4E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "595287535519-fc5557tdi6ne1d20ntcchfpb0pg6tq3s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "595287535519-8t56r03ongqpt5lp9k8e2ch3f2s0i4db.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cardboard.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
