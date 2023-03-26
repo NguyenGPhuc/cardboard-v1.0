@@ -4,6 +4,9 @@ import 'package:cardboard/core/utils/validation_functions.dart';
 import 'package:cardboard/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 
+import '../../firebase.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 // ignore_for_file: must_be_immutable
 class CardBoardSigninDarkScreen
     extends GetWidget<CardBoardSigninDarkController> {
@@ -79,7 +82,7 @@ class CardBoardSigninDarkScreen
                               width: getHorizontalSize(167),
                               margin: getMargin(top: 22),
                               onTap: () {
-                                onTapImgLoginbutton();
+                                onTapImgLoginbutton(context);
                               }),
                           CustomImageView(
                               svgPath: ImageConstant.imgBackbutton,
@@ -92,8 +95,76 @@ class CardBoardSigninDarkScreen
                         ])))));
   }
 
-  onTapImgLoginbutton() {
-    Get.toNamed(AppRoutes.cardBoardMainScreen);
+  onTapImgLoginbutton(context) async {
+    // Call the signInWithEmailAndPassword function to authenticate the user
+    final email = controller.emailaddressController.text;
+    final password = controller.passwordController.text;
+    try {
+      final userCredential =
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      final user = userCredential.user;
+      if (user != null) {
+        // If the authentication was successful, do something with the user object
+        print('User ${user.uid} signed in successfully');
+        Get.toNamed(AppRoutes.cardBoardMainScreen);
+
+      } else {
+        // If the authentication failed, show an error message
+        print('Invalid email or password');
+
+        // Display log in error message in a dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Failed to log in"),
+              content: Text("Invalid email or password"),
+              actions: <Widget>[
+                TextButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+
+        // Clear text field
+        controller.emailaddressController.clear();
+        controller.passwordController.clear();
+      }
+    } on FirebaseAuthException catch (e) {
+      // Handle any errors that occurred during authentication
+      print('An error occurred during authentication: $e');
+
+      // Clear  text field
+      controller.emailaddressController.clear();
+      controller.passwordController.clear();
+
+      // Display log in error message in a dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Error validating credentials"),
+            content: Text("An error occurred during authentication: $e"),
+            actions: <Widget>[
+              TextButton(
+                child: Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   onTapImgBackbutton() {

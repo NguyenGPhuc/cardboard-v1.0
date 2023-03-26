@@ -151,58 +151,17 @@ class CardBoardSignupDarkScreen
                         ])))));
   }
 
-  // WIP - DON'T DELETE
-  // // Save user data to Firebase database, display success message in a dialog, and clear the text fields
-  // void onTapImgSignupbutton(BuildContext context) async{
-  //   try {
-  //
-  //     String userId = FirebaseAuth.instance.currentUser!.uid; // Retrieve the user ID
-  //     // Save user data to Firebase database
-  //     await FirebaseService.usersRef.child(userId).set({
-  //       'first_name': controller.firstnameController.text,
-  //       'last_name': controller.lastnameController.text,
-  //       'email': controller.emailaddressController.text,
-  //       'password': controller.passwordController.text,
-  //     });
-  //
-  //     // Display success message in a dialog
-  //     showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: Text("Success"),
-  //           content: Text("User data saved to database."),
-  //           actions: <Widget>[
-  //             TextButton(
-  //               child: Text("OK"),
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //               },
-  //             ),
-  //           ],
-  //         );
-  //       },
-  //     );
-  //
-  //     // Clear the text fields
-  //     controller.firstnameController.clear();
-  //     controller.lastnameController.clear();
-  //     controller.emailaddressController.clear();
-  //     controller.passwordController.clear();
-  //
-  //   } catch (e) {
-  //     handleError(e, context);
-  //   }
-  // }
-
   // Save user data to Firebase database, display success message in a dialog, and clear the text fields
   void onTapImgSignupbutton(BuildContext context) async{
-    try {
-      // Initialize dynamic card table
-      // await FirebaseService.cardsRef.push().set({
-      //   'card_name': controller.firstnameController.text,
-      // });
+    // Initilize Firebase authentication service
+    final Firebase_auth = FirebaseAuth.instance;
 
+    // Create user through Firebase authentication service.
+    try {
+      UserCredential userCredential = await Firebase_auth.createUserWithEmailAndPassword(
+          email: controller.emailaddressController.text,
+          password: controller.passwordController.text
+      );
       // Save user data to Firebase database
       await FirebaseService.usersRef.push().set({
         'first_name': controller.firstnameController.text,
@@ -237,7 +196,7 @@ class CardBoardSignupDarkScreen
       controller.passwordController.clear();
 
     } catch (e) {
-      handleError(e.toString, context);
+      handleError(e, context);
     }
   }
 
