@@ -1,3 +1,5 @@
+import 'package:firebase_database/firebase_database.dart';
+
 import 'controller/card_board_signup_dark_controller.dart';
 import 'package:cardboard/core/app_export.dart';
 import 'package:cardboard/core/utils/validation_functions.dart';
@@ -7,11 +9,20 @@ import 'package:flutter/material.dart';
 // Import firebase class
 import '../../firebase.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'dart:typed_data';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
 
+final storage = FirebaseStorage.instance;
+final database = FirebaseDatabase.instance;
 // ignore_for_file: must_be_immutable
 class CardBoardSignupDarkScreen
     extends GetWidget<CardBoardSignupDarkController> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -194,10 +205,62 @@ class CardBoardSignupDarkScreen
       controller.lastnameController.clear();
       controller.emailaddressController.clear();
       controller.passwordController.clear();
+      //////
+      uploadImage();
+      uploadImage1();
+      uploadImage2();
+      // final cardImageFile = File("/Users/divyanshsingh/Desktop/GIthub/cardboard-v1.0/assets/images/appleCard@3x.png");
+      // if (await cardImageFile.exists()) {
+      //   print("File exists on local machine.");
+      // } else {
+      //   print("File does not exist on local machine.");
+      // }
+      // final String cardImageName = DateTime.now().millisecondsSinceEpoch.toString();
+      // // Upload the card image file to Firebase Storage
+      // final Reference cardImageRef = storage.ref().child(cardImageName);
+      // final TaskSnapshot cardImageUploadTask = await cardImageRef.putFile(cardImageFile);
+      // final String cardImageDownloadUrl = await cardImageUploadTask.ref.getDownloadURL();
+      //
+      // FirebaseService.cardsRef.push().
+      // set({
+      //   'cardName': "Apple Card" ?? '',
+      //   'bankName': "Goldman Sachs",
+      //   'rewardCategory': "CashBack",
+      //   'dining': 2,
+      //   'gas': 2,
+      //   'eCommerce': 2,
+      //   'groceries': 2,
+      //   'supermarket': 2,
+      //   'streaming': 2,
+      //   'travel': 1,
+      //   'entertainment': 1,
+      //   'lifestyle': 1,
+      //   'other':1,
+      //   'cardImageURL': cardImageDownloadUrl
+      // });
+      // FirebaseService.cardsRef.push().
+      // set({
+      //   'cardName': "Bank of America Premium Rewards",
+      //   'bankName': "Bank of America",
+      //   'rewardCategory': "Points",
+      //   'dining': 2,
+      //   'gas': 1,
+      //   'eCommerce': 1,
+      //   'groceries': 1,
+      //   'supermarket': 1,
+      //   'streaming':1,
+      //   'travel': 2,
+      //   'entertainment': 1,
+      //   'lifestyle': 1,
+      //   'other':1
+      // });
+
 
     } catch (e) {
       handleError(e, context);
     }
+    Get.toNamed(AppRoutes.cardBoardAddCardScreen);
+
   }
 
   // Display error message in a dialog if user data fails to save to Firebase database
@@ -224,6 +287,166 @@ class CardBoardSignupDarkScreen
   }
 
   onTapImgBackbutton() {
-    Get.toNamed(AppRoutes.cardBoardIntroLoginScreen);
+    Get.toNamed(AppRoutes.cardBoardAddCardScreen);
   }
+
+  Future<Uint8List> loadImage(String path) async {
+    var data = await rootBundle.load(path);
+    return data.buffer.asUint8List();
+  }
+  void uploadImage() async {
+    // Load the card image as a Uint8List
+    final Uint8List cardImageBytes = await loadImage('assets/images/appleCard@3x.png');
+
+    // Create a temporary file to hold the image
+    final Directory tempDir = await getTemporaryDirectory();
+    final String tempPath = '${tempDir.path}/cardImage.png';
+    final File tempFile = File(tempPath);
+    tempFile.writeAsBytesSync(cardImageBytes);
+
+    // Create a unique filename for the card image
+    final String cardImageName = "Apple Card";
+
+    // Upload the card image file to Firebase Storage
+    final Reference cardImageRef = storage.ref().child(cardImageName);
+    final TaskSnapshot cardImageUploadTask = await cardImageRef.putFile(tempFile);
+    final String cardImageDownloadUrl = await cardImageUploadTask.ref.getDownloadURL();
+
+    // Store the download URL for the card image in the Firebase Realtime Database
+    FirebaseService.cardsRef.push().set({
+      'cardName': "Apple Card",
+      'bankName': "Goldman Sachs",
+      'rewardCategory': "CashBack",
+      'dining': 2,
+      'gas': 2,
+      'eCommerce': 2,
+      'groceries': 2,
+      'supermarket': 2,
+      'streaming': 2,
+      'travel': 1,
+      'entertainment': 1,
+      'lifestyle': 1,
+      'other': 1,
+      'cardImageURL': cardImageDownloadUrl,
+    });
+  }
+  void uploadImage1() async {
+    // Repeat the above steps to upload and store a different image for another table
+    final Uint8List cardImageBytes1 = await loadImage('assets/images/boaPremiumRewards@3x.png');
+
+    // Create a temporary file to hold the image
+    final Directory tempDir1 = await getTemporaryDirectory();
+    final String tempPath1 = '${tempDir1.path}/cardImage.png';
+    final File tempFile1 = File(tempPath1);
+    tempFile1.writeAsBytesSync(cardImageBytes1);
+
+    // Create a unique filename for the card image
+    final String cardImageName1 = "Bank of America Premium Rewards";
+
+    // Upload the card image file to Firebase Storage
+    final Reference cardImageRef1 = storage.ref().child(cardImageName1);
+    final TaskSnapshot cardImageUploadTask1 = await cardImageRef1.putFile(tempFile1);
+    final String cardImageDownloadUrl1 = await cardImageUploadTask1.ref.getDownloadURL();
+
+    // Generate a unique key for the card
+    final newCardRef = FirebaseService.cardsRef.push();
+    // Store the download URL for the card image in the Firebase Realtime Database
+    newCardRef.set({
+      'cardName': "Bank of America Premium Rewards",
+      'bankName': "Bank of America",
+      'rewardCategory': "Points",
+      'dining': 2,
+      'gas': 1,
+      'eCommerce': 1,
+      'groceries': 1,
+      'supermarket': 1,
+      'streaming':1,
+      'travel': 2,
+      'entertainment': 1,
+      'lifestyle': 1,
+      'other':1,
+      'cardImageURL': cardImageDownloadUrl1,
+    });
+    // Repeat for other tables if needed
+
+    // Delete the temporary file
+    tempFile1.deleteSync();
+  }
+  void uploadImage2() async {
+    // Repeat the above steps to upload and store a different image for another table
+    final Uint8List cardImageBytes2 = await loadImage('assets/images/amexPlatinum@3x.png');
+
+    // Create a temporary file to hold the image
+    final Directory tempDir2 = await getTemporaryDirectory();
+    final String tempPath2 = '${tempDir2.path}/cardImage.png';
+    final File tempFile2 = File(tempPath2);
+    tempFile2.writeAsBytesSync(cardImageBytes2);
+
+    // Create a unique filename for the card image
+    final String cardImageName2 = "Amex Platinum";
+
+    // Upload the card image file to Firebase Storage
+    final Reference cardImageRef2 = storage.ref().child(cardImageName2);
+    final TaskSnapshot cardImageUploadTask2 = await cardImageRef2.putFile(tempFile2);
+    final String cardImageDownloadUrl2 = await cardImageUploadTask2.ref.getDownloadURL();
+
+    // Generate a unique key for the card
+    final newCardRef = FirebaseService.cardsRef.push();
+    // Store the download URL for the card image in the Firebase Realtime Database
+    newCardRef.set({
+      'cardName': "Amex Platinum Card",
+      'bankName': "American Express",
+      'rewardCategory': "Points",
+      'dining': 1,
+      'gas': 1,
+      'eCommerce': 1,
+      'groceries': 1,
+      'supermarket': 1,
+      'streaming':1,
+      'travel': 1,
+      'entertainment': 1,
+      'lifestyle': 1,
+      'other':1,
+      'cardImageURL': cardImageDownloadUrl2,
+    });
+    // Repeat for other tables if needed
+
+    // Delete the temporary file
+    tempFile2.deleteSync();
+  }
+
+// void uploadImage() async {
+  //   // Initialize the card image file
+  //   final cardImageFile = File('assets/images/appleCard@3x.png');
+  //
+  //   // Create a unique filename for the card image
+  //   final String cardImageName = DateTime.now().millisecondsSinceEpoch.toString();
+  //
+  //   // Upload the card image file to Firebase Storage
+  //   final Reference cardImageRef = storage.ref().child(cardImageName);
+  //   final TaskSnapshot cardImageUploadTask = await cardImageRef.putFile(cardImageFile);
+  //   final String cardImageDownloadUrl = await cardImageUploadTask.ref.getDownloadURL();
+  //
+  //   // Store the download URL for the card image in the Firebase Realtime Database
+  //   FirebaseService.cardsRef.push().set({
+  //     'cardName': "Apple Card",
+  //     'bankName': "Goldman Sachs",
+  //     'rewardCategory': "CashBack",
+  //     'dining': 2,
+  //     'gas': 2,
+  //     'eCommerce': 2,
+  //     'groceries': 2,
+  //     'supermarket': 2,
+  //     'streaming': 2,
+  //     'travel': 1,
+  //     'entertainment': 1,
+  //     'lifestyle': 1,
+  //     'other': 1,
+  //     'cardImageURL': cardImageDownloadUrl,
+  //   });
+  //
+  //   // Repeat the above steps to upload and store a different image for another table
+  //
+  //   // Repeat for other tables if needed
+  // }
 }

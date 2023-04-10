@@ -16,6 +16,7 @@ dependencies:
   firebase_core: ^2.8.0
   firebase_database: ^10.0.16
   firebase_auth: ^4.3.0
+  firebase_storage: ^11.1.0
 
 dev_dependencies: 
   flutter_test: 
@@ -25,7 +26,10 @@ flutter:
   assets: 
     - assets/
     - assets/images/
-  fonts: 
+    - assets/images/appleCard@3x.png
+    - assets/images/boaPremiumRewards@3x.png
+    - assets/images/amexPlatinum@3x.png
+  fonts:
     - family: Darker Grotesque
       fonts: 
         - asset: assets/fonts/DarkerGrotesqueBold.ttf
