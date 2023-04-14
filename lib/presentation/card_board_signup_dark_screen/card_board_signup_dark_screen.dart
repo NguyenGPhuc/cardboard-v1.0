@@ -39,6 +39,13 @@ class CardBoardSignupDarkScreen
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
 
+                          Padding(
+                              padding: getPadding(top: 81),
+                              child: Text("lbl_cardboard".tr,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: AppStyle.txtDarkerGrotesqueBold55)),
+
                           // Text box for first name
                           CustomTextFormField(
                               focusNode: FocusNode(),
@@ -152,12 +159,7 @@ class CardBoardSignupDarkScreen
                               height: getVerticalSize(54),
                               width: getHorizontalSize(231),
                               margin: getMargin(top: 7)),
-                          Padding(
-                              padding: getPadding(top: 81),
-                              child: Text("lbl_cardboard".tr,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.left,
-                                  style: AppStyle.txtDarkerGrotesqueBold55)),
+
 
                         ])))));
   }

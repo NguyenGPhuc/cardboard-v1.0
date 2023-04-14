@@ -188,10 +188,17 @@ class CardBoardMainScreen extends GetWidget<CardBoardMainController> {
                                                       .imgResultsbut1,
                                                   height: getVerticalSize(48),
                                                   width: getHorizontalSize(185),
-                                                  margin: getMargin(top: 13))
+                                                  margin: getMargin(top: 13),
+                                                  onTap: () {
+                                                  onTapResultsButton();
+                                              }),
                                             ])))
                               ])))
                     ]))));
+  }
+
+  onTapResultsButton(){
+    Get.toNamed(AppRoutes.cardBoardResultScreen);
   }
 
   onTapImgIntroBoxPngTwo() {

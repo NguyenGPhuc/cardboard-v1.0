@@ -67,6 +67,8 @@ class CardBoardAddCardScreen extends GetWidget<CardBoardAddCardController> {
                                       controller.addCardData(data);
                                       print("selected element is $_selectedIndices");
                                       print("Clicking the element $index");
+                                      String selectedText = _listData[index]['text'];
+                                      print('Selected text is $selectedText');
                                     },
                                     child: Container(
                                       width: getHorizontalSize(3000),
